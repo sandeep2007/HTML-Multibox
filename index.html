@@ -1,59 +1,73 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="multibox.js"></script>
-<script>
-	
-	var obj0 = new Multibox('#data-box0', function (data, source) {
-		data.id = 23;
-		$.ajax({
-			type: 'post',
-			data: data,
-			url: 'ajax/box.php',
-			success: function (response) {
-				source({ view: response });
-			}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>HTML-Multibox</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="multibox.js"></script>
+	<script>
+
+		var obj0 = new Multibox('#data-box0', function (data, source) {
+			data.id = 23;
+			$.ajax({
+				type: 'post',
+				data: data,
+				url: 'ajax/box.php',
+				success: function (response) {
+					source({ view: response });
+				}
+			});
+
+		}, function (data, source) {
+			data.id = 25;
+			$.ajax({
+				type: 'post',
+				data: data,
+				url: 'ajax/row.php',
+				success: function (response) {
+					source({ view: response });
+				}
+			});
 		});
 
-	}, function (data, source) {
-		data.id = 25;
-		$.ajax({
-			type: 'post',
-			data: data,
-			url: 'ajax/row.php',
-			success: function (response) {
-				source({ view: response });
-			}
+		var obj1 = new Multibox('#data-box1', function (data, source) {
+			source({
+				view: '<div class="box">[BOX ' + data.box + ' ]<button style="display:none" class="remove-box" onclick="obj1.deleteBox($(this).parent(),1,boxDelete)">REMOVE BOX</button><button class="add-box" onclick="obj1.getBox()">ADD BOX</button><div class="data-row">[BOX ' + data.box + ', ROW ' + data.row + ']<button onclick="obj1.getRow(this,$(this).parent().parent())" class="add-row">ADD ROW</button><button class="remove-row" style="display:none" onclick="obj1.deleteRow($(this).parent(),1,rowDelete)">REMOVE</button></div><br/></div>'
+			});
+		}, function (data, source) {
+			source({
+				view: '<div class="data-row">[BOX ' + data.box + ', ROW ' + data.row + ']<button onclick="obj1.getRow(this,$(this).parent().parent())" class="add-row">ADD ROW</button><button style="display:none" class="remove-row" onclick="obj1.deleteRow($(this).parent())">REMOVE</button></div>'
+			});
 		});
-	});
 
-	var obj1 = new Multibox('#data-box1', function (data, source) {
-		source({
-			view: '<div class="box">[BOX ' + data.box + ' ]<button style="display:none" class="remove-box" onclick="obj1.deleteBox($(this).parent(),1,boxDelete)">REMOVE BOX</button><button class="add-box" onclick="obj1.getBox()">ADD BOX</button><div class="data-row">[BOX ' + data.box + ', ROW ' + data.row + ']<button onclick="obj1.getRow(this,$(this).parent().parent())" class="add-row">ADD ROW</button><button class="remove-row" style="display:none" onclick="obj1.deleteRow($(this).parent(),1,rowDelete)">REMOVE</button></div><br/></div>'
+
+		function boxDelete(el, id) {
+			console.log('callback function boxDelete() called');
+			$(el).remove();
+		}
+		function rowDelete(el, id) {
+			console.log('callback function rowDelete() called');
+			$(el).remove();
+		}
+
+		$(document).ready(function () {
+			obj0.getBox();
+			obj1.getBox();
 		});
-	}, function (data, source) {
-		source({
-			view: '<div class="data-row">[BOX ' + data.box + ', ROW ' + data.row + ']<button onclick="obj1.getRow(this,$(this).parent().parent())" class="add-row">ADD ROW</button><button style="display:none" class="remove-row" onclick="obj1.deleteRow($(this).parent())">REMOVE</button></div>'
-		});
-	});
+	</script>
+</head>
 
+<body>
+	<div id="data-box0" data-index="0">
+		<div class="box"></div>
+	</div>
+	<hr />
+	<div id="data-box1" data-index="0">
+		<div class="box"></div>
+	</div>
+</body>
 
-	function boxDelete(el, id) {
-		console.log('callback function boxDelete() called');
-		$(el).remove();
-	}
-	function rowDelete(el, id) {
-		console.log('callback function rowDelete() called');
-		$(el).remove();
-	}
-
-	$(document).ready(function () {
-		obj0.getBox();
-		obj1.getBox();
-	});
-</script>
-<div id="data-box0" data-index="0">
-	<div class="box"></div>
-</div>
-<hr />
-<div id="data-box1" data-index="0">
-	<div class="box"></div>
-</div>
+</html>
